@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
         printf("Please specify a valid URLs file to open.\n");
         exit(1);
     }
-    feed_t *feed = create_feed(urls_raw);
+    feed_t *feed = create_feed(urls_raw, "Test");
 
     initscr();
     int cx = 0;

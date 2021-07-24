@@ -1,5 +1,5 @@
-#ifndef RRSS_H_
-#define RRSS_H_
+#ifndef FEED_H_
+#define FEED_H_
 
 typedef struct feed {
     int size;
@@ -12,4 +12,4 @@ feed_t *create_feed(char *, char *);
 
 void free_feed(feed_t *);
 
-#endif // RRSS_H_
+#endif // FEED_H_

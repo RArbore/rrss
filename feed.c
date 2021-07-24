@@ -28,10 +28,22 @@ feed_t *create_feed(char *urls_raw, char *name) {
         feed->titles[i] = malloc(max_line_size * sizeof(char));
     }
 
-    size_t line;
+    size_t line = 0, line_index = 0;
     int seen_space = 0;
     for (i = 0; urls_raw[i] != '\0'; i++) {
-
+        if (urls_raw[i] == ' ') {
+            seen_space = 1;
+            line_index = 0;
+            continue;
+        }
+        else if (urls_raw[i] == '\n') {
+            seen_space = 0;
+            line_index = 0;
+            line++;
+            continue;
+        }
+        if (seen_space) feed->titles[line][line_index++] = urls_raw[i];
+        else feed->urls[line][line_index++] = urls_raw[i];
     }
 
     return feed;
