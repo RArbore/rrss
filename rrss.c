@@ -37,6 +37,11 @@ int main(int argc, char** argv) {
         exit(1);
     }
     feed_t *feed = create_feed(urls_raw, "Test");
+    printf("%s %d\n", feed->name, feed->size);
+    for (int i = 0; i < 4; i++) {
+        printf("%s ", feed->urls[i]);
+        printf("%s\n", feed->titles[i]);
+    }
 
     initscr();
     int cx = 0;
