@@ -1,7 +1,13 @@
 #include "render.h"
 
+int colors = 0;
+
 void init_curses() {
-  initscr();
+    initscr();
+    if (has_colors() && start_color() == OK) {
+        colors = 1;
+        init_pair(1, COLOR_WHITE, COLOR_BLUE);
+    }
 }
 
 void render(feed_t *feed) {
@@ -12,13 +18,20 @@ void render(feed_t *feed) {
         ends_reached = 0;
         for (cx = 0; cx < w; cx++) {
             move(cy, cx);
-            if (cx == 0 || cx + 1 >= w || cy == 0 || cy + 1 >= h) addch('.');
-            else if (cy == 1 && ends_reached == 0) {
-                addch(title[cx - 1]);
-                if (cx - 1 == 6) ends_reached++;
+            attroff(COLOR_PAIR(1));
+            if (cy == 0) {
+                attrset(COLOR_PAIR(1) | A_BOLD);
+                if (ends_reached == 0) {
+                    addch(title[cx]);
+                    if (cx == 6) ends_reached++;
+                }
+                else if (ends_reached == 1 && feed->name[cx - 7] == '\0') {
+                    addch(' ');
+                    ends_reached++;
+                }
+                else if (ends_reached == 1) addch(feed->name[cx - 7]);
+                else addch(' ');
             }
-            else if (cy == 1 && ends_reached == 1 && feed->name[cx - 8] == '\0') ends_reached++;
-            else if (cy == 1 && ends_reached == 1) addch(feed->name[cx - 8]);
             else addch(' ');
         }
     }
