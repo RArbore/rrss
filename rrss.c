@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "keyboard.h"
 #include "render.h"
 #include "feed.h"
 
@@ -42,6 +43,7 @@ int main(int argc, char** argv) {
     init_curses();
     for (;;) {
         render(feed);
+        block_handle_input(feed);
     }
 
     return 0;

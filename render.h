@@ -7,6 +7,8 @@
 
 void init_curses();
 
+void scroll_feed(int, feed_t *);
+
 void render(feed_t *);
 
 #endif // RENDER_H_

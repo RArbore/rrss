@@ -12,6 +12,16 @@ void init_curses() {
     }
 }
 
+void scroll_feed(int scroll_amount, feed_t *feed) {
+    selected += scroll_amount;
+    if (selected < 0) selected = 0;
+    else if (selected >= feed->size) selected = feed->size - 1;
+
+    int h = getmaxy(stdscr);
+    if (selected > scrolled + h - 2) scrolled = selected - h + 2;
+    else if (selected < scrolled) scrolled = selected;
+}
+
 void render(feed_t *feed) {
     int cx, cy, w, h, ends_reached;
     char title[] = "RRSS - ";
