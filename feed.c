@@ -4,7 +4,8 @@
 
 feed_t *create_feed(char *urls_raw, char *name) {
     feed_t *feed = malloc(sizeof(feed_t));
-    feed->name = name;
+    feed->name = malloc(strlen(name));
+    strcpy(feed->name, name);
 
     size_t nls = 0, i, max_line_size = 0, cur_line_size = 0;
     for (i = 0; urls_raw[i] != '\0'; i++) {
