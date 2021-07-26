@@ -1,6 +1,8 @@
 #include "render.h"
 
 int colors = 0;
+int scrolled = 0;
+int selected = 0;
 
 void init_curses() {
     initscr();
@@ -18,7 +20,7 @@ void render(feed_t *feed) {
         ends_reached = 0;
         for (cx = 0; cx < w; cx++) {
             move(cy, cx);
-            attroff(COLOR_PAIR(1));
+            attroff(COLOR_PAIR(1) | A_BOLD);
             if (cy == 0) {
                 attrset(COLOR_PAIR(1) | A_BOLD);
                 if (ends_reached == 0) {
@@ -30,6 +32,17 @@ void render(feed_t *feed) {
                     ends_reached++;
                 }
                 else if (ends_reached == 1) addch(feed->name[cx - 7]);
+                else addch(' ');
+            }
+            else if (cy + scrolled - 1 < feed->size) {
+                if (cy + scrolled - 1 == selected) attrset(COLOR_PAIR(1));
+                if (ends_reached == 0 && feed->titles[cy + scrolled - 1][cx] != '\0') {
+                    addch(feed->titles[cy + scrolled - 1][cx]);
+                }
+                else if (ends_reached == 0) {
+                    ends_reached++;
+                    addch(' ');
+                }
                 else addch(' ');
             }
             else addch(' ');
