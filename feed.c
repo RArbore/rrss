@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <string.h>
 #include "feed.h"
 
 feed_t *create_feed(char *urls_raw, char *name) {

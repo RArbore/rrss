@@ -1,6 +1,7 @@
-#include <ncurses.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include "render.h"
 #include "feed.h"
 
 char* open_urls(char* urls_file_name) {
@@ -36,20 +37,12 @@ int main(int argc, char** argv) {
         printf("Please specify a valid URLs file to open.\n");
         exit(1);
     }
+    feed_t *feed = create_feed(urls_raw, argv[1]);
+
+    init_curses();
     for (;;) {
-        feed_t *feed = create_feed(urls_raw, "Test");
-        free_feed(feed);
+        render(feed);
     }
 
-    initscr();
-    int cx = 0;
-    int cy = 0;
-    for (;;) {
-        move(cx++, cy++);
-        addch(65 + cx % 26);
-        refresh();
-        napms(100);
-    }
-    endwin();
     return 0;
 }

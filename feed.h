@@ -1,6 +1,9 @@
 #ifndef FEED_H_
 #define FEED_H_
 
+#include <stdlib.h>
+#include <string.h>
+
 typedef struct feed {
     int size;
     char *name;
