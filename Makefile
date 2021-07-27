@@ -5,7 +5,7 @@
 # @version 0.1
 
 CC=gcc
-LFLAGS=-lncurses
+LFLAGS=-lncurses -lcurl
 OUTPUT=rrss
 
 $(OUTPUT): rrss.o feed.o render.o keyboard.o

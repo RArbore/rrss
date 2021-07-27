@@ -1,3 +1,4 @@
+#include "render.h"
 #include "feed.h"
 
 feed_t *create_feed(char *urls_raw, char *name) {
@@ -68,4 +69,43 @@ void free_feed(feed_t *feed) {
     free(feed->urls);
     free(feed->titles);
     free(feed);
+}
+
+size_t write_data(void *ptr, size_t size, size_t nmemb, void *data_v) {
+    curl_data_t *data = (curl_data_t *) data_v;
+
+    char *tmp = realloc(data->data, data->size + size * nmemb + 1);
+    data->data = tmp;
+    memcpy(&(data->data[data->size]), ptr, size * nmemb);
+    data->size += size * nmemb;
+    data->data[data->size] = 0;
+    return size * nmemb;
+}
+
+char *curl_rss(char *url, int *response_size) {
+    CURL *curl;
+    CURLcode res;
+    curl_data_t chunk;
+    chunk.data = malloc(4);
+    chunk.size = 0;
+
+    curl_global_init(CURL_GLOBAL_ALL);
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) &chunk);
+        //curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            kill_curses();
+            printf("%s\n", curl_easy_strerror(res));
+            exit(1);
+        }
+    }
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
+
+    *response_size = chunk.size;
+    return chunk.data;
 }

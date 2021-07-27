@@ -6,6 +6,7 @@ int selected = 0;
 
 void init_curses() {
     initscr();
+    curs_set(0);
     if (has_colors() && start_color() == OK) {
         colors = 1;
         init_pair(1, COLOR_WHITE, COLOR_BLUE);
@@ -20,6 +21,15 @@ void scroll_feed(int scroll_amount, feed_t *feed) {
     int h = getmaxy(stdscr);
     if (selected > scrolled + h - 2) scrolled = selected - h + 2;
     else if (selected < scrolled) scrolled = selected;
+}
+
+void scroll_page_feed(int dir, feed_t * feed) {
+    int h = getmaxy(stdscr) - 1;
+    scroll_feed(dir * h, feed);
+}
+
+int get_selected() {
+    return selected;
 }
 
 void render(feed_t *feed) {
@@ -45,7 +55,8 @@ void render(feed_t *feed) {
                 else addch(' ');
             }
             else if (cy + scrolled - 1 < feed->size) {
-                if (cy + scrolled - 1 == selected) attrset(COLOR_PAIR(1));
+                if (cy + scrolled - 1 == selected && colors) attrset(COLOR_PAIR(1));
+                else if (cy + scrolled - 1 == selected) attrset(A_BOLD);
                 if (ends_reached == 0 && feed->titles[cy + scrolled - 1][cx] != '\0') {
                     addch(feed->titles[cy + scrolled - 1][cx]);
                 }
@@ -59,4 +70,9 @@ void render(feed_t *feed) {
         }
     }
     refresh();
+}
+
+void kill_curses() {
+    curs_set(1);
+    endwin();
 }

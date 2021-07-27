@@ -3,9 +3,6 @@
 
 #include <ncurses.h>
 
-#include "render.h"
-#include "feed.h"
-
 void block_handle_input();
 
 #endif // KEYBOARD_H_
