@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <expat.h>
 
 #include "keyboard.h"
 #include "render.h"
@@ -39,11 +40,12 @@ int main(int argc, char** argv) {
         exit(1);
     }
     feed_t *feed = create_feed(urls_raw, argv[1]);
+    XML_Parser parser = initialize_expat();
 
     init_curses();
     for (;;) {
         render(feed);
-        block_handle_input(feed);
+        block_handle_input(feed, parser);
     }
 
     return 0;

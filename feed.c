@@ -99,7 +99,7 @@ char *curl_rss(char *url, int *response_size) {
         res = curl_easy_perform(curl);
         if (res != CURLE_OK) {
             kill_curses();
-            printf("%s\n", curl_easy_strerror(res));
+            fprintf(stderr, "%s\n", curl_easy_strerror(res));
             exit(1);
         }
     }
@@ -108,4 +108,26 @@ char *curl_rss(char *url, int *response_size) {
 
     *response_size = chunk.size;
     return chunk.data;
+}
+
+void XMLCALL start_tag(void *data, const XML_Char *el, const XML_Char **attr) {
+
+}
+
+void XMLCALL end_tag(void *data, const XML_Char *el) {
+
+}
+
+XML_Parser initialize_expat() {
+    XML_Parser parser = XML_ParserCreate(NULL);
+    if (!parser) {
+        fprintf(stderr, "Couldn't create XML parser.\n");
+        exit(1);
+    }
+    XML_SetElementHandler(parser, start_tag, end_tag);
+    return parser;
+}
+
+rss_t *process_rss(char *response, int response_size, XML_Parser parser) {
+
 }

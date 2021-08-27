@@ -2,7 +2,7 @@
 #include "render.h"
 #include "feed.h"
 
-void block_handle_input(feed_t *feed) {
+void block_handle_input(feed_t *feed, XML_Parser parser) {
     timeout(-1);
     char c = (char) getch();
     switch (c) {
@@ -24,6 +24,7 @@ void block_handle_input(feed_t *feed) {
         case 10: //enter
             int response_size;
             char *response = curl_rss(feed->urls[get_selected()], &response_size);
+            rss_t *rss = process_rss(response, response_size, parser);
         default:
     }
 }
